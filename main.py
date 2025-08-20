@@ -34,7 +34,11 @@ for filename in subtitle_files:
                 if marker_index != -1:
                     line = line[marker_index + len(MARKER):]
 
+                # Removes the leading whitespace before any newline characters
+                line = line.replace(" \\N", "\\N")
+
                 # Saves the refined line
                 processed_lines.append(line)
+                print(line)
 
 print("Execution complete.")
