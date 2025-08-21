@@ -1,6 +1,9 @@
 import os
+import argostranslate.translate
 
 MARKER = ",,0000,0000,0000,,"
+FROM_CODE = "en"
+TO_CODE = "pt"
 
 # Gets the path to the current directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -42,6 +45,6 @@ for filename in subtitle_files:
 
                 # Saves the refined line
                 processed_lines.append(line)
-                print(line)
+                print(argostranslate.translate.translate(line, FROM_CODE, TO_CODE))
 
 print("Execution complete.")
