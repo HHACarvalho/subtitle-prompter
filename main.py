@@ -1,6 +1,6 @@
 import os
 
-MARKER = ",,0,0,0,,"
+MARKER = ",,0000,0000,0000,,"
 
 # Gets the path to the current directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -35,7 +35,10 @@ for filename in subtitle_files:
                     line = line[marker_index + len(MARKER):]
 
                 # Removes the leading whitespace before any newline characters
-                line = line.replace(" \\N", "\\N")
+                line = line.replace(" \\N", "\\n")
+
+                # Removes unnecessary formatting
+                line = line.replace("\\i1", "").replace("\\b1", "").replace("{}", "")
 
                 # Saves the refined line
                 processed_lines.append(line)
