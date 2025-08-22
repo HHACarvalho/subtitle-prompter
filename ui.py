@@ -1,5 +1,49 @@
 import tkinter as tk
 
+# UI elements
+root = None
+text_input = None
+button_frame = None
+button_previous = None
+button_play = None
+button_next = None
+text_output = None
+
+# Button click event handlers
+def on_button_previous_click():
+    previous_line()
+
+def on_button_play_click():
+    play_line()
+
+def on_button_next_click():
+    next_line()
+
+# Button action functions
+def previous_line():
+
+    global line_counter
+
+    save_line()
+    if line_counter == 0:
+        return
+
+    line_counter -= 1
+    cycle_line()
+
+def play_line():
+    pass
+
+def next_line():
+
+    global line_counter
+
+    save_line()
+    if line_counter == len(filtered_lines) - 1:
+        return
+    
+    line_counter += 1
+    cycle_line()
 def initialize_ui():
 
     global root, text_input, button_frame, button_previous, button_play, button_next, text_output
