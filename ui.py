@@ -1,9 +1,9 @@
 from tkinter import filedialog
+import sys
 import tkinter as tk
 
 # Global variables
-filtered_indexes = None
-filtered_lines = None
+filename = None
 line_counter = 0
 
 # UI elements
@@ -52,6 +52,7 @@ def next_line():
     cycle_line()
 
 def cycle_line():
+
     global filtered_lines, line_counter, text_input, text_output
 
     text_input.delete(1.0, tk.END)
@@ -106,3 +107,13 @@ def select_file():
     )
 
     return file_path if file_path else None
+
+# Loads the content of a file into memory
+def load_file(filename):
+    
+    try:
+        with open(filename, "r", encoding="utf-8") as file:
+            return file.read()
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
