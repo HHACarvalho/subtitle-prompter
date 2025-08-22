@@ -1,3 +1,4 @@
+from tkinter import filedialog
 import tkinter as tk
 
 # UI elements
@@ -75,3 +76,16 @@ def initialize_ui():
     # Output text area
     text_output = tk.Text(root, height=4, width=60)
     text_output.pack(padx=10, pady=10)
+
+# Opens a file dialog for the user to select a subtitle file
+def select_file():
+
+    file_path = filedialog.askopenfilename(
+        title="Select Subtitle File",
+        filetypes=[
+            ("Subtitle files", ("*.srt", "*.ass")),
+            ("All files", "*.*")
+        ]
+    )
+
+    return file_path if file_path else None
