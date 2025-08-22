@@ -1,6 +1,11 @@
 from tkinter import filedialog
 import tkinter as tk
 
+# Global variables
+filtered_indexes = None
+filtered_lines = None
+line_counter = 0
+
 # UI elements
 root = None
 text_input = None
@@ -45,6 +50,18 @@ def next_line():
     
     line_counter += 1
     cycle_line()
+
+def cycle_line():
+    global filtered_lines, line_counter, text_input, text_output
+
+    text_input.delete(1.0, tk.END)
+    text_input.insert(tk.END, filtered_lines[line_counter])
+
+    translated_line = argostranslate.translate.translate(filtered_lines[line_counter], FROM_CODE, TO_CODE)
+
+    text_output.delete(1.0, tk.END)
+    text_output.insert(tk.END, translated_line)
+
 def initialize_ui():
 
     global root, text_input, button_frame, button_previous, button_play, button_next, text_output
