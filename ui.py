@@ -47,29 +47,55 @@ def previous_line():
 def play_line():
     pass
 
+# Moves to the next line
 def next_line():
 
-    global line_counter
+    global line_counter, lines_dialogue
 
     save_line()
-    if line_counter == len(filtered_lines) - 1:
+    if line_counter == len(lines_dialogue) - 1:
         return
     
     line_counter += 1
     cycle_line()
 
+# Updates the UI with the current line
 def cycle_line():
 
-    global filtered_lines, line_counter, text_input, text_output
+    global line_counter, lines_dialogue, text_input, text_output
 
     text_input.delete(1.0, tk.END)
-    text_input.insert(tk.END, filtered_lines[line_counter])
+    text_input.insert(tk.END, lines_dialogue[line_counter][1])
 
-    translated_line = argostranslate.translate.translate(filtered_lines[line_counter], FROM_CODE, TO_CODE)
+    translated_line = argostranslate.translate.translate(lines_dialogue[line_counter][1], FROM_CODE, TO_CODE)
 
     text_output.delete(1.0, tk.END)
     text_output.insert(tk.END, translated_line)
 
+# Opens a file dialog for the user to select a subtitle file
+def select_file():
+
+    file_path = filedialog.askopenfilename(
+        title="Select Subtitle File",
+        filetypes=[
+            ("Subtitle files", ("*.srt", "*.ass")),
+            ("All files", "*.*")
+        ]
+    )
+
+    return file_path if file_path else None
+
+# Loads the content of a file into memory
+def load_file(filename):
+
+    try:
+        with open(filename, "r", encoding="utf-8") as file:
+            return file.read()
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
+
+# Initializes the UI components
 def initialize_ui():
 
     global root, text_input, button_frame, button_previous, button_play, button_next, text_output
@@ -147,3 +173,28 @@ def parse_dialogue(line):
 
     return [metadata, line, line]
 
+# Main function
+def main():
+
+    global filename, lines_header, lines_dialogue
+    
+    filename = select_file()
+    if not filename:
+        print("No file selected. Exiting...")
+        sys.exit(0)
+
+    file_content = load_file(filename)
+    if not file_content:
+        print("Failed to load the file. Exiting...")
+        sys.exit(1)
+
+    # Initializes the UI components
+    initialize_ui()
+
+    # Parses the subtitle file
+    parse_subtitles(filename, file_content)
+
+    # Displays the UI
+    root.mainloop()
+
+main()
