@@ -1,9 +1,16 @@
 from tkinter import filedialog
+import argostranslate.translate
 import sys
 import tkinter as tk
 
+# Constants
+FROM_CODE = "en"
+TO_CODE = "pt"
+
 # Global variables
 filename = None
+lines_header = None
+lines_dialogue = None
 line_counter = 0
 
 # UI elements
@@ -95,25 +102,48 @@ def initialize_ui():
     text_output = tk.Text(root, height=4, width=60)
     text_output.pack(padx=10, pady=10)
 
-# Opens a file dialog for the user to select a subtitle file
-def select_file():
+# Parses the subtitle file
+def parse_subtitles(filename, file_content):
 
-    file_path = filedialog.askopenfilename(
-        title="Select Subtitle File",
-        filetypes=[
-            ("Subtitle files", ("*.srt", "*.ass")),
-            ("All files", "*.*")
-        ]
-    )
+    # Handles dialogue based on file type
+    if filename.lower().endswith(".ass"):
 
-    return file_path if file_path else None
+        lines_header = []
+        lines_dialogue = []
 
-# Loads the content of a file into memory
-def load_file(filename):
-    
-    try:
-        with open(filename, "r", encoding="utf-8") as file:
-            return file.read()
-    except Exception as e:
-        print(f"Error: {e}")
-        return None
+        # Separates header and dialogue lines
+        for line in file_content.splitlines():
+            if line.startswith("Dialogue:"):
+                lines_dialogue.append(parse_dialogue(line))
+            else:
+                lines_header.append(line)
+
+        # Validates content
+        if not lines_header or not lines_dialogue:
+            print("Subtitle file is empty. Exiting...")
+            sys.exit(1)
+
+        cycle_line()
+
+    else:
+        print("Unsupported subtitle file format.")
+        sys.exit(1)
+
+# Separates metadata from dialogue and refines the dialogue line
+def parse_dialogue(line):
+
+    metadata_index = -1
+
+    for i in range(9):
+        metadata_index = line.find(",", metadata_index + 1)
+
+    # Extracts the metadata
+    metadata = line[:metadata_index+1]
+
+    # Refines the line by removing unnecessary formatting
+    line = line[metadata_index + 1:]
+    line = line.replace(" \\N", "\\n")
+    line = line.replace("\\i1", "").replace("\\b1", "").replace("{}", "")
+
+    return [metadata, line, line]
+
