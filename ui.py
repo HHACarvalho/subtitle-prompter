@@ -1,5 +1,6 @@
 from tkinter import filedialog
 import argostranslate.translate
+import os
 import sys
 import tkinter as tk
 
@@ -23,6 +24,9 @@ button_next = None
 text_output = None
 
 # Button click event handlers
+def on_button_save_click():
+    save()
+
 def on_button_previous_click():
     previous_line()
 
@@ -33,6 +37,18 @@ def on_button_next_click():
     next_line()
 
 # Button action functions
+def save():
+
+    global filename, lines_header, lines_dialogue
+
+    with open(f"{os.path.dirname(filename)}/Updated.ass", "w") as file:
+        #file.writelines(lines_header)
+        for line in lines_header:
+            file.write(line + "\n")
+        for line in lines_dialogue:
+            file.write(line[0] + line[2] + "\n")
+
+# Moves to the previous line
 def previous_line():
 
     global line_counter
@@ -58,6 +74,13 @@ def next_line():
     
     line_counter += 1
     cycle_line()
+
+# Saves the current line's translation
+def save_line():
+
+    global line_counter, lines_dialogue, text_output
+
+    lines_dialogue[line_counter][2] = text_output.get(1.0, tk.END).strip()
 
 # Updates the UI with the current line
 def cycle_line():
@@ -103,6 +126,9 @@ def initialize_ui():
     # Initialize the main application window
     root = tk.Tk()
     root.title("Subtitle Prompter")
+
+    button_save = tk.Button(root, text="Save", width=8, command=on_button_save_click)
+    button_save.pack(padx=10, pady=10)
 
     # Input text area
     text_input = tk.Text(root, height=4, width=60)
