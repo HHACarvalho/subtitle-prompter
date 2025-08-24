@@ -1,6 +1,6 @@
 # Subtitle Prompter
 
-A simple program that extracts the lines of dialogue from a file as prepares a prompt to translate them.
+A simple program to aid in the translation of a subtitle file.
 
 ### Linux-only Setup
 
