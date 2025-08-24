@@ -1,4 +1,4 @@
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 import argostranslate.translate
 import os
 import sys
@@ -41,12 +41,13 @@ def save():
 
     global filename, lines_header, lines_dialogue
 
-    with open(f"{os.path.dirname(filename)}/Updated.ass", "w") as file:
-        #file.writelines(lines_header)
-        for line in lines_header:
-            file.write(line + "\n")
-        for line in lines_dialogue:
-            file.write(line[0] + line[2] + "\n")
+    if messagebox.askyesno("Save", "Do you want to save the changes?"):
+        with open(f"{os.path.dirname(filename)}/Output.ass", "w") as file:
+            #file.writelines(lines_header)
+            for line in lines_header:
+                file.write(line + "\n")
+            for line in lines_dialogue:
+                file.write(line[0] + line[2] + "\n")
 
 # Moves to the previous line
 def previous_line():
@@ -156,6 +157,8 @@ def initialize_ui():
 
 # Parses the subtitle file
 def parse_subtitles(filename, file_content):
+
+    global lines_header, lines_dialogue
 
     # Handles dialogue based on file type
     if filename.lower().endswith(".ass"):
